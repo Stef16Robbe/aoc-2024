@@ -1,0 +1,21 @@
+[package]
+name = "advent"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+argh = { workspace = true }
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+yansi = { workspace = true }
+ascii-art = { path = "../ascii-art", optional = true }
+prelude = { path = "../prelude", optional = true }
+
+[features]
+festive = ["dep:ascii-art"]
+json = ["dep:serde", "dep:serde_json"]
+prelude = ["dep:prelude"]
+
+[lints]
+workspace = true

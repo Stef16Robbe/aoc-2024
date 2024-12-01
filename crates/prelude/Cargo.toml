@@ -1,0 +1,19 @@
+[package]
+name = "prelude"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+ahash = { workspace = true }
+either = { workspace = true }
+itermore = { workspace = true }
+itertools = { workspace = true }
+regex-macro = { workspace = true }
+vectrix = { workspace = true }
+
+itertools-shim = { path = "../itertools-shim" }
+then = { version = "0.1.0", path = "../then" }
+
+[lints]
+workspace = true
