@@ -36,7 +36,23 @@ fn part1(lists: Lists) -> i64 {
 }
 
 fn part2(lists: Lists) -> i64 {
-    todo!("part 2")
+    let mut total = 0i64;
+    let (list1, list2) = lists;
+
+    // "dumb" method
+    for a in &list1 {
+        let mut times_found = 0i64;
+
+        for b in &list2 {
+            if a == b {
+                times_found += 1;
+            }
+        }
+
+        total += times_found * a;
+    }
+
+    total
 }
 
 fn main() {
@@ -56,12 +72,12 @@ fn example() {
 ",
     );
     assert_eq!(part1(lists.clone()), 11);
-    // assert_eq!(part2(lists), 26);
+    assert_eq!(part2(lists), 31);
 }
 
 #[test]
 fn default() {
     let lists = default_input();
     assert_eq!(part1(lists.clone()), 936063);
-    // assert_eq!(part2(lists), 2);
+    assert_eq!(part2(lists), 23150395);
 }
