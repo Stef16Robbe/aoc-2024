@@ -1,7 +1,5 @@
 # advent
 
-[![Build Status](https://github.com/rossmacarthur/advent/actions/workflows/build.yaml/badge.svg)](https://github.com/rossmacarthur/advent/actions/workflows/build.yaml)
-
 My 🎅 [Advent of Code](https://adventofcode.com) solutions. Includes a runner
 and benchmarker with free Christmas trees 🎄.
 
