@@ -16,25 +16,29 @@ fn default_input() -> Vec<Vec<i64>> {
     parse_input(include_input!(2024 / 02))
 }
 
+fn check_if_safe(report: &Vec<i64>) -> bool {
+    let mut safe = true;
+
+    for i in 1..report.len() {
+        let diff = (report[i - 1] - report[i]).abs();
+
+        if !((1..=3).contains(&diff)) {
+            safe = false;
+        }
+    }
+
+    if !(report.windows(2).all(|w| w[0] < w[1]) || report.windows(2).all(|w| w[0] > w[1])) {
+        safe = false;
+    }
+
+    return safe;
+}
+
 fn part1(input: Vec<Vec<i64>>) -> i64 {
     let mut total_safe = 0;
 
     for report in input {
-        let mut safe = true;
-
-        for i in 1..report.len() {
-            let diff = (report[i - 1] - report[i]).abs();
-
-            if !((1..=3).contains(&diff)) {
-                safe = false;
-            }
-        }
-
-        if !(report.windows(2).all(|w| w[0] < w[1]) || report.windows(2).all(|w| w[0] > w[1])) {
-            safe = false;
-        }
-
-        if safe {
+        if check_if_safe(&report) {
             total_safe += 1;
         }
     }
@@ -43,7 +47,27 @@ fn part1(input: Vec<Vec<i64>>) -> i64 {
 }
 
 fn part2(input: Vec<Vec<i64>>) -> i64 {
-    todo!("part 2")
+    let mut total_safe = 0;
+
+    for report in input {
+        if check_if_safe(&report) {
+            total_safe += 1;
+        } else {
+            let mut fixed_report = report.clone();
+            for i in 0..fixed_report.len() + 1 {
+                let idx_to_remove = i.saturating_sub(1);
+                fixed_report.remove(idx_to_remove);
+                if check_if_safe(&fixed_report) {
+                    total_safe += 1;
+                    break;
+                } else {
+                    fixed_report = report.clone();
+                }
+            }
+        }
+    }
+
+    total_safe
 }
 
 fn main() {
@@ -63,12 +87,12 @@ fn example() {
 ",
     );
     assert_eq!(part1(reports.clone()), 2);
-    // assert_eq!(part2(reports), 31);
+    assert_eq!(part2(reports), 4);
 }
 
 #[test]
 fn default() {
     let input = default_input();
     assert_eq!(part1(input.clone()), 631);
-    // assert_eq!(part2(input), 2);
+    assert_eq!(part2(input), 2);
 }
