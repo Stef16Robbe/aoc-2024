@@ -35,7 +35,33 @@ fn default_input() -> PageInfo {
 }
 
 fn part1(input: PageInfo) -> i64 {
-    todo!("part 1")
+    let (order_rules, to_produce) = input;
+    let mut total_correct = 0;
+
+    for produce_line in &to_produce {
+        let mut is_correct = true;
+
+        for rule_pair in &order_rules {
+            let (first, second) = (rule_pair[0], rule_pair[1]);
+            if !produce_line.contains(&first) || !produce_line.contains(&second) {
+                continue;
+            }
+
+            let first_idx = produce_line.iter().position(|n| *n == first).unwrap();
+            let second_idx = produce_line.iter().position(|n| *n == second).unwrap();
+
+            if first_idx > second_idx {
+                is_correct = false;
+                break;
+            }
+        }
+
+        if is_correct {
+            total_correct += produce_line[produce_line.len() / 2];
+        }
+    }
+
+    total_correct
 }
 
 fn part2(input: PageInfo) -> i64 {
@@ -84,9 +110,9 @@ fn example() {
     // assert_eq!(part2(reports), 4);
 }
 
-// #[test]
-// fn default() {
-//     let input = default_input();
-//     assert_eq!(part1(input.clone()), 1);
-//     assert_eq!(part2(input), 2);
-// }
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(input.clone()), 1);
+    // assert_eq!(part2(input), 2);
+}
