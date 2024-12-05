@@ -1,9 +1,10 @@
 use advent::prelude::*;
 use nom::{bytes::complete::take_while_m_n, character::is_digit, AsBytes, IResult};
 
-/// `get_num` makes use of [nom](https://docs.rs/nom/7.1.3/nom/index.html),
-/// which I really wanted to try out for this task :D
-/// it consumes a subslice of 1-3 digit characters if it exists
+/// `get_num` makes use of [nom](https://docs.rs/nom/7.1.3/nom/index.html)
+///
+/// I really wanted to try it out for this task :D.
+/// It consumes a subslice of 1-3 digit characters if it exists,
 /// otherwise it returns an error
 fn get_num(input: &[u8]) -> IResult<&[u8], &[u8]> {
     take_while_m_n(1, 3, is_digit)(input)
@@ -18,13 +19,13 @@ fn parse_input(input: &str) -> Vec<(i64, i64)> {
         // check if we can retrieve the first number
         if let Ok((remainder, first_num)) = get_num(input[take_from_idx..].as_bytes()) {
             // must be followed up by a comma
-            if !(remainder.first() == Some(&b',')) {
+            if remainder.first() != Some(&b',') {
                 continue;
             }
             // now we can try parsing the second number
             if let Ok((remainder, second_num)) = get_num(remainder[1..].as_bytes()) {
                 // which must be follow up by a closing parenthesis
-                if !(remainder.first() == Some(&b')')) {
+                if remainder.first() != Some(&b')') {
                     continue;
                 }
 

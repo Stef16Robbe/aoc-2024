@@ -31,7 +31,7 @@ fn check_if_safe(report: &Vec<i64>) -> bool {
         safe = false;
     }
 
-    return safe;
+    safe
 }
 
 fn part1(input: Vec<Vec<i64>>) -> i64 {
