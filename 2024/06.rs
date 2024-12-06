@@ -1,6 +1,7 @@
 use advent::prelude::*;
 use std::{collections::HashSet, str::FromStr};
 
+// X, Y
 type Position = (usize, usize);
 
 #[derive(Debug, Clone)]
@@ -9,6 +10,17 @@ enum Direction {
     Right,
     Down,
     Left,
+}
+
+impl Direction {
+    fn turn(&mut self) {
+        *self = match *self {
+            Direction::Up => Direction::Right,
+            Direction::Right => Direction::Down,
+            Direction::Down => Direction::Left,
+            Direction::Left => Direction::Up,
+        };
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -47,7 +59,7 @@ fn parse_input(input: &str) -> Map {
         .unwrap_or(input)
         .lines()
         .collect::<Vec<_>>();
-    let bounds = (rows[0].len(), rows.len());
+    let bounds = (rows[0].len() - 1, rows.len() - 1);
 
     let mut obstacles = HashSet::new();
     let mut current_pos = (0, 0);
@@ -82,8 +94,28 @@ fn default_input() -> Map {
     parse_input(include_input!(2024 / 06))
 }
 
-fn part1(input: Map) -> i64 {
-    todo!("part 1")
+fn part1(mut map: Map) -> usize {
+    let mut total_pos: HashSet<(usize, usize)> = HashSet::new();
+
+    while map.player.current_pos.0 <= map.bounds.0 && map.player.current_pos.1 <= map.bounds.1 {
+        total_pos.insert(map.player.current_pos);
+        let new_pos = match map.player.direction {
+            // All Y coordinate moves are switched, because the Y axis is actually reversed
+            // (started counting from the top)
+            Direction::Up => (map.player.current_pos.0, map.player.current_pos.1 - 1),
+            Direction::Right => (map.player.current_pos.0 + 1, map.player.current_pos.1),
+            Direction::Down => (map.player.current_pos.0, map.player.current_pos.1 + 1),
+            Direction::Left => (map.player.current_pos.0 - 1, map.player.current_pos.1),
+        };
+
+        if map.obstacles.contains(&new_pos) {
+            map.player.direction.turn()
+        } else {
+            map.player.current_pos = new_pos;
+        }
+    }
+
+    total_pos.len()
 }
 
 fn part2(input: Map) -> i64 {
@@ -110,13 +142,13 @@ fn example() {
 ......#...
 ",
     );
-    assert_eq!(part1(reports.clone()), 143);
+    assert_eq!(part1(reports.clone()), 41);
     // assert_eq!(part2(reports), 4);
 }
 
-// #[test]
-// fn default() {
-//     let input = default_input();
-//     assert_eq!(part1(input.clone()), 1);
-//     assert_eq!(part2(input), 2);
-// }
+#[test]
+fn default() {
+    let input = default_input();
+    assert_eq!(part1(input.clone()), 1);
+    // assert_eq!(part2(input), 2);
+}
